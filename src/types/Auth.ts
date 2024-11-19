@@ -1,4 +1,5 @@
 export interface User {
     username: string;
-    authHeader: string;
-  }
+    token: string;
+    role?: string;
+}

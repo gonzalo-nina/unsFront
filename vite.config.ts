@@ -6,23 +6,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/authenticate': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        secure: false
+      },
       '/api': {
         target: 'http://localhost:8081',
         changeOrigin: true,
-        secure: false,
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('Sending Request to the Target:', req.method, req.url);
-            // Esto evita que el proxy envíe el challenge de autenticación
-            proxyReq.setHeader('X-Forwarded-Auth', 'suppress');
-          });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
-          });
-        }
+        secure: false
       }
     }
   }

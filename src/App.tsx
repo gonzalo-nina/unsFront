@@ -12,6 +12,7 @@ import EstudianteTable from './components/EstudianteTable';
 import Login from './components/Login';
 import AuthService from './services/AuthService';
 import { User } from './types/Auth'; // Crea este archivo si no existe
+import './utils/axiosConfig';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

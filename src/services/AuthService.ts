@@ -2,33 +2,29 @@
 import axios from 'axios';
 import { User } from '../types/Auth';
 
-const API_URL = '/api';
+const API_URL = '/authenticate'; // Remove /api prefix
 
 class AuthService {
   async login(username: string, password: string): Promise<User | null> {
     try {
-      const authHeader = 'Basic ' + btoa(username + ':' + password);
-      const response = await axios.get(`${API_URL}/estudiantes`, {
-        headers: { 
-          'Authorization': authHeader,
-          // Añadir este header para prevenir el popup del navegador
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        validateStatus: (status) => {
-          return true; // Permite cualquier código de estado para manejarlo manualmente
+      const response = await axios.post(API_URL, null, {
+        params: {
+          username,
+          password
         }
       });
       
-      if (response.status === 200) {
-        const userData: User = { username, authHeader };
+      if (response.data.token) {
+        const userData: User = { 
+          username, 
+          token: response.data.token 
+        };
         localStorage.setItem('user', JSON.stringify(userData));
-        // Configura el header por defecto para futuras peticiones
-        axios.defaults.headers.common['Authorization'] = authHeader;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`;
         return userData;
-      } else if (response.status === 401) {
-        throw new Error('Credenciales inválidas');
       }
       return null;
+
     } catch (error) {
       throw new Error('Credenciales inválidas');
     }
@@ -42,9 +38,8 @@ class AuthService {
   getCurrentUser(): User | null {
     const userStr = localStorage.getItem('user');
     if (userStr) {
-      const user = JSON.parse(userStr);
-      // Restaura el header de autorización
-      axios.defaults.headers.common['Authorization'] = user.authHeader;
+      const user: User = JSON.parse(userStr);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
       return user;
     }
     return null;
