@@ -16,6 +16,8 @@ export default defineConfig({
           });
           proxy.on('proxyReq', (proxyReq, req, _res) => {
             console.log('Sending Request to the Target:', req.method, req.url);
+            // Esto evita que el proxy envíe el challenge de autenticación
+            proxyReq.setHeader('X-Forwarded-Auth', 'suppress');
           });
           proxy.on('proxyRes', (proxyRes, req, _res) => {
             console.log('Received Response from the Target:', proxyRes.statusCode, req.url);

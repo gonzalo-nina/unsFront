@@ -53,7 +53,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     <Box maxW="md" mx="auto" mt={8}>
       <VStack spacing={8}>
         <Heading>Iniciar Sesión</Heading>
-        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+        <form onSubmit={handleSubmit} style={{ width: '100%' }} autoComplete="off">
           <VStack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Usuario</FormLabel>
@@ -61,6 +61,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"  // Añadir esto
               />
             </FormControl>
             <FormControl isRequired>
@@ -69,6 +70,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"  // Añadir esto
               />
             </FormControl>
             <Button

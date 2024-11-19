@@ -9,7 +9,14 @@ class AuthService {
     try {
       const authHeader = 'Basic ' + btoa(username + ':' + password);
       const response = await axios.get(`${API_URL}/estudiantes`, {
-        headers: { 'Authorization': authHeader }
+        headers: { 
+          'Authorization': authHeader,
+          // Añadir este header para prevenir el popup del navegador
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+          return true; // Permite cualquier código de estado para manejarlo manualmente
+        }
       });
       
       if (response.status === 200) {
@@ -18,11 +25,13 @@ class AuthService {
         // Configura el header por defecto para futuras peticiones
         axios.defaults.headers.common['Authorization'] = authHeader;
         return userData;
+      } else if (response.status === 401) {
+        throw new Error('Credenciales inválidas');
       }
+      return null;
     } catch (error) {
       throw new Error('Credenciales inválidas');
     }
-    return null;
   }
 
   logout() {
