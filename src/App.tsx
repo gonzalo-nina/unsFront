@@ -11,14 +11,18 @@ import {
 import EstudianteTable from './components/EstudianteTable';
 import Login from './components/Login';
 import AuthService from './services/AuthService';
-import { User } from './types/Auth'; // Crea este archivo si no existe
+import { User } from './types/Auth';
 import './utils/axiosConfig';
 
 const App: React.FC = () => {
+  // Estados para manejar la autenticación y el nombre de usuario
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string>('');
+  
+  // Color de fondo que cambia según el modo de color
   const bgColor = useColorModeValue('gray.50', 'gray.800');
 
+  // Efecto para verificar si hay un usuario autenticado al cargar la aplicación
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     if (user) {
@@ -27,11 +31,13 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // Manejador para cuando el inicio de sesión es exitoso
   const handleLoginSuccess = (user: User) => {
     setIsAuthenticated(true);
     setUsername(user.username);
   };
 
+  // Manejador para cerrar sesión
   const handleLogout = () => {
     AuthService.logout();
     setIsAuthenticated(false);
@@ -42,8 +48,10 @@ const App: React.FC = () => {
     <Box bg={bgColor} minH="100vh" py={5}>
       <Container maxW="container.xl" centerContent px={[4, 6, 8]}>
         {!isAuthenticated ? (
+          // Mostrar el componente de inicio de sesión si no está autenticado
           <Login onLoginSuccess={handleLoginSuccess} />
         ) : (
+          // Mostrar la interfaz principal si está autenticado
           <VStack spacing={5} w="100%">
             <Flex w="100%" justify="space-between" align="center">
               <Heading size="xl" color={useColorModeValue('gray.700', 'white')}>
@@ -56,6 +64,7 @@ const App: React.FC = () => {
                 </Button>
               </Flex>
             </Flex>
+            {/* Componente principal para la gestión de estudiantes */}
             <EstudianteTable />
           </VStack>
         )}

@@ -1,13 +1,17 @@
+// Importamos las funciones y tipos necesarios de Chakra UI
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
+// Configuración del tema
 const config: ThemeConfig = {
-  initialColorMode: 'light',
-  useSystemColorMode: false,
+  initialColorMode: 'light', // Modo de color inicial
+  useSystemColorMode: false, // No usar el modo de color del sistema
 };
 
+// Definición y extensión del tema personalizado
 const theme = extendTheme({
-  config,
+  config, // Aplicamos la configuración
   colors: {
+    // Definimos una paleta de colores personalizados
     primary: {
       100: '#E3F2F9',
       200: '#C5E4F3',
@@ -22,12 +26,14 @@ const theme = extendTheme({
   },
   styles: {
     global: {
+      // Estilos globales para el body
       body: {
-        bg: 'white',
-        color: 'gray.800',
+        bg: 'white', // Fondo blanco
+        color: 'gray.800', // Color de texto oscuro
       },
     },
   },
 });
 
+// Exportamos el tema para su uso en la aplicación
 export default theme;

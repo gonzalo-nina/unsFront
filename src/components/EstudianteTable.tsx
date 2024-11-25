@@ -1,29 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  useToast,
-  VStack,
-  Box,
-  Text,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  useDisclosure,
+  Table, Thead, Tbody, Tr, Th, Td, Button, useToast, VStack, Box, Text,
+  AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader,
+  AlertDialogContent, AlertDialogOverlay, useDisclosure
 } from '@chakra-ui/react';
 import EstudianteService from '../services/EstudianteService';
 import { Estudiante } from '../types/Estudiante';
 import EstudianteForm from './EstudianteForm';
 
 const EstudianteTable: React.FC = () => {
+  // Estados para manejar la lista de estudiantes y operaciones
   const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
   const [estudianteToEdit, setEstudianteToEdit] = useState<Estudiante | undefined>(undefined);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -31,10 +17,12 @@ const EstudianteTable: React.FC = () => {
   const cancelRef = React.useRef(null);
   const toast = useToast();
 
+  // Cargar estudiantes al montar el componente
   useEffect(() => {
     fetchEstudiantes();
   }, []);
 
+  // Función para obtener la lista de estudiantes
   const fetchEstudiantes = async () => {
     try {
       const response = await EstudianteService.getEstudiantes();
@@ -49,10 +37,12 @@ const EstudianteTable: React.FC = () => {
     }
   };
 
+  // Manejador para añadir un nuevo estudiante
   const handleEstudianteAdded = (newEstudiante: Estudiante) => {
     setEstudiantes([...estudiantes, newEstudiante]);
   };
 
+  // Manejador para actualizar un estudiante existente
   const handleEstudianteUpdated = (updatedEstudiante: Estudiante) => {
     setEstudiantes(estudiantes.map(est => 
       est.id === updatedEstudiante.id ? updatedEstudiante : est
@@ -60,11 +50,13 @@ const EstudianteTable: React.FC = () => {
     setEstudianteToEdit(undefined);
   };
 
+  // Manejador para iniciar el proceso de eliminación
   const handleDeleteClick = (id: number) => {
     setDeleteId(id);
     onOpen();
   };
 
+  // Manejador para confirmar la eliminación de un estudiante
   const handleDeleteConfirm = async () => {
     if (deleteId) {
       try {
@@ -89,12 +81,14 @@ const EstudianteTable: React.FC = () => {
 
   return (
     <VStack spacing={[4, 6, 8]} w="100%">
+      {/* Formulario para añadir/editar estudiantes */}
       <EstudianteForm
         onEstudianteAdded={handleEstudianteAdded}
         onEstudianteUpdated={handleEstudianteUpdated}
         estudianteToEdit={estudianteToEdit}
       />
 
+      {/* Tabla de estudiantes */}
       <Box overflowX="auto" w="100%" px={[2, 4, 6]}>
         {estudiantes.length > 0 ? (
           <Table variant="simple" size={['sm', 'md']}>
@@ -140,6 +134,7 @@ const EstudianteTable: React.FC = () => {
         )}
       </Box>
 
+      {/* Diálogo de confirmación para eliminar estudiante */}
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

@@ -11,6 +11,7 @@ import {
 import EstudianteService from '../services/EstudianteService';
 import { Estudiante } from '../types/Estudiante';
 
+// Definición de las propiedades del componente EstudianteForm
 interface EstudianteFormProps {
   onEstudianteAdded: (estudiante: Estudiante) => void;
   onEstudianteUpdated: (estudiante: Estudiante) => void;
@@ -22,6 +23,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
   onEstudianteUpdated,
   estudianteToEdit,
 }) => {
+  // Estados para los campos del formulario
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
@@ -29,6 +31,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
 
+  // Efecto para cargar los datos del estudiante a editar
   useEffect(() => {
     if (estudianteToEdit) {
       setNombre(estudianteToEdit.nombre);
@@ -38,6 +41,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
     }
   }, [estudianteToEdit]);
 
+  // Función para manejar el envío del formulario
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -45,6 +49,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
 
     try {
       if (isEditMode && estudianteToEdit) {
+        // Actualizar estudiante existente
         const response = await EstudianteService.updateEstudiante(
           estudianteToEdit.id,
           estudianteData as Estudiante
@@ -56,6 +61,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
           duration: 3000,
         });
       } else {
+        // Crear nuevo estudiante
         const response = await EstudianteService.createEstudiante(
           estudianteData as Estudiante
         );
@@ -79,6 +85,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
     }
   };
 
+  // Función para reiniciar el formulario
   const resetForm = () => {
     setNombre('');
     setApellido('');
@@ -90,6 +97,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
     <Box w={['100%', '90%', '70%', '50%']} maxW="md" mx="auto">
       <form onSubmit={handleSubmit}>
         <VStack spacing={4} align="stretch">
+          {/* Campo de nombre */}
           <FormControl isRequired>
             <FormLabel>Nombre</FormLabel>
             <Input
@@ -99,6 +107,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
             />
           </FormControl>
 
+          {/* Campo de apellido */}
           <FormControl isRequired>
             <FormLabel>Apellido</FormLabel>
             <Input
@@ -108,6 +117,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
             />
           </FormControl>
 
+          {/* Campo de email */}
           <FormControl isRequired>
             <FormLabel>Email</FormLabel>
             <Input
@@ -118,6 +128,7 @@ const EstudianteForm: React.FC<EstudianteFormProps> = ({
             />
           </FormControl>
 
+          {/* Botón de envío */}
           <Button
             type="submit"
             colorScheme="teal"
