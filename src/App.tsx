@@ -6,18 +6,22 @@ import {
   useColorModeValue, 
   Button, 
   Flex,
-  Heading 
+  Heading,
+  useDisclosure
 } from '@chakra-ui/react';
 import EstudianteTable from './components/EstudianteTable';
 import Login from './components/Login';
 import AuthService from './services/AuthService';
 import { User } from './types/Auth';
 import './utils/axiosConfig';
+import UserForm from './components/UserForm';
 
 const App: React.FC = () => {
   // Estados para manejar la autenticación y el nombre de usuario
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string>('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   
   // Color de fondo que cambia según el modo de color
   const bgColor = useColorModeValue('gray.50', 'gray.800');
@@ -28,6 +32,7 @@ const App: React.FC = () => {
     if (user) {
       setIsAuthenticated(true);
       setUsername(user.username);
+      setCurrentUser(user);
     }
   }, []);
 
@@ -35,6 +40,7 @@ const App: React.FC = () => {
   const handleLoginSuccess = (user: User) => {
     setIsAuthenticated(true);
     setUsername(user.username);
+    setCurrentUser(user);
   };
 
   // Manejador para cerrar sesión
@@ -59,6 +65,11 @@ const App: React.FC = () => {
               </Heading>
               <Flex align="center" gap={4}>
                 <Box>Bienvenido, {username}</Box>
+                {currentUser?.role === 'ADMIN' && (
+                  <Button colorScheme="green" onClick={onOpen}>
+                    Registrar Usuario
+                  </Button>
+                )}
                 <Button colorScheme="red" onClick={handleLogout}>
                   Cerrar Sesión
                 </Button>
@@ -66,6 +77,7 @@ const App: React.FC = () => {
             </Flex>
             {/* Componente principal para la gestión de estudiantes */}
             <EstudianteTable />
+            <UserForm isOpen={isOpen} onClose={onClose} />
           </VStack>
         )}
       </Container>

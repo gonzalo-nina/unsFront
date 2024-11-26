@@ -29,33 +29,32 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const toast = useToast();
 
   // Manejador del envío del formulario
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Asegurarnos que esto se ejecuta primero
+    
     setIsLoading(true);
     
     try {
-      // Intenta iniciar sesión con las credenciales proporcionadas
+      console.log('Intentando login con:', { username, password }); // Debug log
       const user = await AuthService.login(username, password);
+      
       if (user) {
-        // Muestra un toast de éxito si el inicio de sesión es correcto
         toast({
           title: 'Login exitoso',
           status: 'success',
           duration: 3000,
         });
-        // Llama a la función de éxito pasada como prop
         onLoginSuccess(user);
       }
-    } catch (error) {
-      // Muestra un toast de error si las credenciales son incorrectas
+    } catch (error: any) {
+      console.error('Error en login:', error); // Debug log
       toast({
         title: 'Error de autenticación',
-        description: 'Usuario o contraseña incorrectos',
+        description: error.message || 'Usuario o contraseña incorrectos',
         status: 'error',
         duration: 3000,
       });
     } finally {
-      // Desactiva el estado de carga
       setIsLoading(false);
     }
   };
@@ -65,7 +64,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     <Box maxW="md" mx="auto" mt={8}>
       <VStack spacing={8}>
         <Heading>Iniciar Sesión</Heading>
-        <form onSubmit={handleSubmit} style={{ width: '100%' }} autoComplete="off">
+        <form 
+          onSubmit={handleSubmit}
+          style={{ width: '100%' }}
+          noValidate // Prevenir validación HTML nativa
+        >
           <VStack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Usuario</FormLabel>
@@ -90,6 +93,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               colorScheme="teal"
               width="100%"
               isLoading={isLoading}
+              disabled={isLoading} // Prevenir múltiples envíos
             >
               Ingresar
             </Button>

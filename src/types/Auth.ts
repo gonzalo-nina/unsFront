@@ -1,9 +1,17 @@
-// Interfaz que define la estructura de un usuario
+// src/types/Auth.ts
 export interface User {
-    // Nombre de usuario
+    id?: number;
     username: string;
-    // Token de autenticación
-    token: string;
-    // Rol del usuario (opcional)
+    password?: string;
+    token?: string;
+    nombre: string;
+    apellido: string;
+    email: string;
     role?: string;
 }
+
+export interface Role {
+    id: number;
+    name: string;
+}
+

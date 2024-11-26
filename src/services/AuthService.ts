@@ -14,7 +14,14 @@ class AuthService {
       });
       
       if (response.data.token) {
-        const userData: User = { username, token: response.data.token };
+        const userData: User = {
+          username,
+          nombre: response.data.user.nombre,
+          apellido: response.data.user.apellido,
+          email: response.data.user.email,
+          role: response.data.user.role,
+          token: response.data.token
+        };
         // Guardar datos del usuario en localStorage
         localStorage.setItem('user', JSON.stringify(userData));
         // Configurar el token en los headers de Axios
