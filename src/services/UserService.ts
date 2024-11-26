@@ -14,14 +14,38 @@ class UserService {
     }
 
     createUser(user: Omit<User, 'id'> & { roleId: number }) {
-        return axios.post<User>(API_URL, {
-            ...user,
-            roles: [{ id: user.roleId }]
-        });
+        const userData = {
+            username: user.username,
+            password: user.password,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            email: user.email,
+            roles: [{ id: parseInt(user.roleId.toString()) }]
+        };
+        return axios.post<User>(API_URL, userData);
     }
 
-    updateUser(id: number, user: Partial<User>) {
-        return axios.put<User>(`${API_URL}/${id}`, user);
+    updateUser(id: number, user: Partial<User> & { roleId?: string }) {
+        const userData: {
+            username: string | undefined;
+            nombre: string | undefined;
+            apellido: string | undefined;
+            email: string | undefined;
+            roles: { id: number }[];
+            password?: string;
+        } = {
+            username: user.username,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            email: user.email,
+            roles: [{ id: parseInt(user.roleId || '1') }]
+        };
+        
+        if (user.password) {
+            userData['password'] = user.password;
+        }
+        
+        return axios.put<User>(`${API_URL}/${id}`, userData);
     }
 
     deleteUser(id: number) {

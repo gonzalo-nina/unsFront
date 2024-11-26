@@ -54,6 +54,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         status: 'error',
         duration: 3000,
       });
+      console.log(username, password)
     } finally {
       setIsLoading(false);
     }
